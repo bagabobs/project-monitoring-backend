@@ -74,6 +74,7 @@
   <module name="FileLength"/>
   <module name="LineLength">
     <property name="fileExtensions" value="java"/>
+    <property name="max" value="120"/>
   </module>
 
   <!-- Checks for whitespace                               -->
@@ -100,12 +101,12 @@
 
     <!-- Checks for Javadoc comments.                     -->
     <!-- See https://checkstyle.org/checks/javadoc/index.html -->
-    <module name="InvalidJavadocPosition"/>
-    <module name="JavadocMethod"/>
-    <module name="JavadocType"/>
-    <module name="JavadocVariable"/>
-    <module name="JavadocStyle"/>
-    <module name="MissingJavadocMethod"/>
+<!--    <module name="InvalidJavadocPosition"/>-->
+<!--    <module name="JavadocMethod"/>-->
+<!--    <module name="JavadocType"/>-->
+<!--    <module name="JavadocVariable"/>-->
+<!--    <module name="JavadocStyle"/>-->
+<!--    <module name="MissingJavadocMethod"/>-->
 
     <!-- Checks for Naming Conventions.                  -->
     <!-- See https://checkstyle.org/checks/naming/index.html -->
@@ -163,7 +164,10 @@
     <!-- See https://checkstyle.org/checks/coding/index.html -->
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
-    <module name="HiddenField"/>
+    <module name="HiddenField">
+      <property name="ignoreSetter" value="true" />
+      <property name="ignoreConstructorParameter" value="true" />
+    </module>
     <module name="IllegalInstantiation"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>

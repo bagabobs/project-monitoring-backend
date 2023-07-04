@@ -6,4 +6,5 @@
 <suppressions>
     <suppress checks=".*" files="UserManagementApplication\.java" />
     <suppress checks=".*" files="UserManagementApplicationTests\.java" />
+    <suppress checks=".*" files=".*[\\/]generated[\\/].*$" />
 </suppressions>

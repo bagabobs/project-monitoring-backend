@@ -3,14 +3,12 @@
  */
 package com.baga.promon.usermanagement.generated;
 
-
 import com.baga.promon.usermanagement.generated.tables.Employees;
-
 
 /**
  * Convenience access to all tables in public.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Tables {
 
     /**

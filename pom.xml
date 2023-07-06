@@ -117,7 +117,7 @@
 									</database>
 									<target>
 										<packageName>com.baga.promon.usermanagement.generated</packageName>
-										<directory>src/main</directory>
+										<directory>src/main/java</directory>
 									</target>
 								</generator>
 							</jooq>

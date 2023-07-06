@@ -1,3 +1,5 @@
 package com.baga.promon.usermanagement.domain;
 
-public record Employee(Long id, String address, String name) {}
+import java.time.OffsetDateTime;
+
+public record Employee(Long id, String address, String name, OffsetDateTime joinDate) {}

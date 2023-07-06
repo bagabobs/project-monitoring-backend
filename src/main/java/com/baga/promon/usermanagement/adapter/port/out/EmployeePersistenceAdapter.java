@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EmployeePersistenceAdapter implements SaveEmployeeEntityPort {
-        @Override
-        public long saveEntity(Employee entity) {
+    @Override
+    public long saveEntity(Employee entity) {
 
-            return 0;
-        }
+        return 0;
+    }
 }

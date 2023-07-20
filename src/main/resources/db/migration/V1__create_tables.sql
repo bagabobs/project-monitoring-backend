@@ -2,7 +2,7 @@ create table employees (
 	id numeric not null,
 	name varchar not null,
 	address varchar not null,
-	join_date timestamptz not null,
+	join_date timestamp not null,
 	constraint employee_pk primary key (id)
 );
 

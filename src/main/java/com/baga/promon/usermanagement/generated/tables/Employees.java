@@ -9,7 +9,7 @@ import com.baga.promon.usermanagement.generated.Public;
 import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 import org.jooq.Field;
@@ -69,7 +69,7 @@ public class Employees extends TableImpl<EmployeesRecord> {
     /**
      * The column <code>public.employees.join_date</code>.
      */
-    public final TableField<EmployeesRecord, OffsetDateTime> JOIN_DATE = createField(DSL.name("join_date"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false), this, "");
+    public final TableField<EmployeesRecord, LocalDateTime> JOIN_DATE = createField(DSL.name("join_date"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
     private Employees(Name alias, Table<EmployeesRecord> aliased) {
         this(alias, aliased, null);
@@ -158,14 +158,14 @@ public class Employees extends TableImpl<EmployeesRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<BigDecimal, String, String, OffsetDateTime> fieldsRow() {
+    public Row4<BigDecimal, String, String, LocalDateTime> fieldsRow() {
         return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function4<? super BigDecimal, ? super String, ? super String, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super BigDecimal, ? super String, ? super String, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -173,7 +173,7 @@ public class Employees extends TableImpl<EmployeesRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super BigDecimal, ? super String, ? super String, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super BigDecimal, ? super String, ? super String, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

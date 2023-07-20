@@ -1,4 +1,5 @@
 package com.baga.promon.usermanagement.application.service;
+import static com.baga.promon.usermanagement.util.UserManagementUtils.convertDateToLocalDateTime;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @ExtendWith(MockitoExtension.class)
 public class SaveEmployeeUseCaseTest {
@@ -32,9 +33,9 @@ public class SaveEmployeeUseCaseTest {
     void saveEmployeeNotThrownExceptionWhenSuccess() {
         assertThatNoException().isThrownBy(() -> {
             SaveEmployeeCommand saveEmployeeCommand = new SaveEmployeeCommand("name", "address",
-                    LocalDateTime.now());
-            Employee employee = new Employee(null, saveEmployeeCommand.getAddress(), saveEmployeeCommand.getName(),
-                    saveEmployeeCommand.getJoinDate());
+                    new Date());
+            Employee employee = new Employee(null, saveEmployeeCommand.address(), saveEmployeeCommand.name(),
+                    convertDateToLocalDateTime(saveEmployeeCommand.joinDate()));
             when(saveEmployeeEntityPort.saveEntity(employee)).thenReturn(1L);
             saveEmployeeUseCase.saveEmployee(saveEmployeeCommand);
         });
@@ -50,7 +51,7 @@ public class SaveEmployeeUseCaseTest {
     @Test
     void saveEmployeeThrowsExceptionWhenAddressIsNull() {
         assertThatThrownBy(() -> {
-            SaveEmployeeCommand command = new SaveEmployeeCommand("name", null, LocalDateTime.now());
+            SaveEmployeeCommand command = new SaveEmployeeCommand("name", null, new Date());
             saveEmployeeUseCase.saveEmployee(command);
         }).isInstanceOf(UserManagementException.class)
                 .hasMessage("Address cannot be empty");
@@ -59,7 +60,7 @@ public class SaveEmployeeUseCaseTest {
     @Test
     void saveEmployeeThrowsExceptionWhenNameIsNull() {
         assertThatThrownBy(() -> {
-            SaveEmployeeCommand command = new SaveEmployeeCommand(null, "address", LocalDateTime.now());
+            SaveEmployeeCommand command = new SaveEmployeeCommand(null, "address", new Date());
             saveEmployeeUseCase.saveEmployee(command);
         })
                 .isInstanceOf(UserManagementException.class)

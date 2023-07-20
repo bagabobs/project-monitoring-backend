@@ -8,6 +8,8 @@ import com.baga.promon.usermanagement.util.PersistenceAdapterException;
 import com.baga.promon.usermanagement.util.UserManagementException;
 import org.springframework.stereotype.Service;
 
+import static com.baga.promon.usermanagement.util.UserManagementUtils.convertDateToLocalDateTime;
+
 @Service
 public class SaveEmployeeService implements SaveEmployeeUseCase {
     private final SaveEmployeeEntityPort saveEmployeeEntityPort;
@@ -21,24 +23,25 @@ public class SaveEmployeeService implements SaveEmployeeUseCase {
         try {
             validateSaveEmployeeCommand(command);
 
-            Employee employee = new Employee(null, command.getAddress(), command.getName(), command.getJoinDate());
+            Employee employee = new Employee(null, command.address(), command.name(),
+                    convertDateToLocalDateTime(command.joinDate()));
             saveEmployeeEntityPort.saveEntity(employee);
         } catch (PersistenceAdapterException e) {
             throw new UserManagementException(e.getMessage(), e);
         }
     }
 
-    void validateSaveEmployeeCommand(SaveEmployeeCommand command) throws UserManagementException {
+    private void validateSaveEmployeeCommand(SaveEmployeeCommand command) throws UserManagementException {
         if (command == null) {
             throw new UserManagementException("SaveEmployeeCommand cannot be empty");
         }
-        if (command.getAddress() == null) {
+        if (command.address() == null) {
             throw new UserManagementException("Address cannot be empty");
         }
-        if (command.getName() == null) {
+        if (command.name() == null) {
             throw new UserManagementException("Name cannot be empty");
         }
-        if (command.getJoinDate() == null) {
+        if (command.joinDate() == null) {
             throw new UserManagementException("Join Date cannot be empty");
         }
     }

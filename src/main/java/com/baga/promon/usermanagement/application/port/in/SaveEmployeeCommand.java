@@ -1,27 +1,9 @@
 package com.baga.promon.usermanagement.application.port.in;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-public final class SaveEmployeeCommand {
-    private final String name;
-    private final String address;
-    private final LocalDateTime joinDate;
+import java.util.Date;
 
-    public SaveEmployeeCommand(final String name, final String address, final LocalDateTime joinDate) {
-        this.name = name;
-        this.address = address;
-        this.joinDate = joinDate;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public LocalDateTime getJoinDate() {
-        return joinDate;
-    }
+public record SaveEmployeeCommand(String name, String address,
+                                  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date joinDate) {
 }

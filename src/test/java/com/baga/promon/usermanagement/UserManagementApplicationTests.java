@@ -1,13 +1,11 @@
 package com.baga.promon.usermanagement;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.SpringApplication;
 
-@SpringBootTest
 class UserManagementApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.from(UserManagementApplication::main)
+                .with(ContainersConfig.class)
+                .run(args);
+    }
 }

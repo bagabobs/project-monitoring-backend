@@ -1,4 +1,4 @@
-package com.baga.promon.usermanagement.application.port.in;
+package com.baga.promon.usermanagement.adapter.port.in;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

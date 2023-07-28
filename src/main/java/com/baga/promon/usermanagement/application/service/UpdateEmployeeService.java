@@ -1,6 +1,6 @@
 package com.baga.promon.usermanagement.application.service;
 
-import com.baga.promon.usermanagement.application.port.in.UpdateEmployeeCommand;
+import com.baga.promon.usermanagement.adapter.port.in.UpdateEmployeeCommand;
 import com.baga.promon.usermanagement.application.port.in.UpdateEmployeeUseCase;
 import com.baga.promon.usermanagement.application.port.out.UpdateEmployeePort;
 import com.baga.promon.usermanagement.domain.Employee;

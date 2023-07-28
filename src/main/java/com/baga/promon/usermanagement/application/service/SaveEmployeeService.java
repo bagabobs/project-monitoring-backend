@@ -1,6 +1,6 @@
 package com.baga.promon.usermanagement.application.service;
 
-import com.baga.promon.usermanagement.application.port.in.SaveEmployeeCommand;
+import com.baga.promon.usermanagement.adapter.port.in.SaveEmployeeCommand;
 import com.baga.promon.usermanagement.application.port.in.SaveEmployeeUseCase;
 import com.baga.promon.usermanagement.application.port.out.SaveEmployeeEntityPort;
 import com.baga.promon.usermanagement.domain.Employee;

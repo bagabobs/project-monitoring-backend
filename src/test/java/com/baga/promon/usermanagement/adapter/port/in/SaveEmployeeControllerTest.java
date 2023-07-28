@@ -1,7 +1,5 @@
-package com.baga.promon.usermanagement.application.in;
+package com.baga.promon.usermanagement.adapter.port.in;
 
-import com.baga.promon.usermanagement.application.port.in.SaveEmployeeCommand;
-import com.baga.promon.usermanagement.application.port.in.SaveEmployeeController;
 import com.baga.promon.usermanagement.application.port.in.SaveEmployeeUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -26,14 +24,13 @@ public class SaveEmployeeControllerTest {
     @Test
     void testInsert() throws Exception {
         SaveEmployeeCommand command = new SaveEmployeeCommand("name", "address", new Date());
-        System.out.println(asJsonString(command));
         mockMvc.perform(post("/v1/employee/save")
                 .content(asJsonString(command))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
-    public static String asJsonString(final Object obj) {
+    private static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
         } catch (Exception e) {

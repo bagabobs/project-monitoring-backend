@@ -75,4 +75,72 @@ public class EmployeesRepositoryTest {
                 .isInstanceOf(RepositoryImplementationException.class)
                 .hasMessage("Join Date in Employee cannot be empty");
     }
+
+    @Test
+    void updateEmployeeHaveSameDataWithSelectQuery() throws RepositoryImplementationException {
+        String address = "address";
+        String name = "name";
+        LocalDateTime offsetDateTimeNow = LocalDateTime.now();
+        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
+        Long saveId = repository.save(employee);
+
+        String updatedName = "updatedn name";
+        Employee updatedEmployee = new Employee(new BigDecimal(saveId), address, updatedName, offsetDateTimeNow);
+        Long result = repository.update(updatedEmployee);
+
+        EmployeesRecord record = context.selectFrom(EMPLOYEES)
+                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        assertThat(record).isNotNull();
+        assertThat(result).isEqualTo(saveId);
+        assertThat(record.getAddress()).isEqualTo(address);
+        assertThat(record.getName()).isEqualTo(updatedName);
+    }
+
+    @Test
+    void updateEmployeeWhenEmployeeIsEmptyThrowsException() {
+        assertThatThrownBy(() -> repository.update(null))
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("Employee cannot be empty");
+    }
+
+    @Test
+    void updateEmployeeWhenIdInEmployeeIsEmptyThenThrowException() {
+        assertThatThrownBy(() -> {
+            Employee employee = new Employee(null, "Address", "name", LocalDateTime.now());
+            repository.update(employee);
+        })
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("ID in Employee cannot be empty");
+    }
+
+    @Test
+    void updateEmployeeWhenNameInEmployeeIsEmptyThenThrowException() {
+        assertThatThrownBy(() -> {
+            Employee employee = new Employee(new BigDecimal(1), "address", null, LocalDateTime.now());
+            repository.update(employee);
+        })
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("Name in Employee cannot be empty");
+    }
+
+    @Test
+    void updateEmployeeWhenAddressIsEmptyThenThrowException() {
+        assertThatThrownBy(() -> {
+            Employee employee = new Employee(new BigDecimal(1), null, "name", LocalDateTime.now());
+            repository.update(employee);
+        })
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("Address in Employee cannot be empty");
+    }
+
+    @Test
+    void updateEmployeeWhenJoinDateInEmployeeIsEmptyThenThrowsException() {
+        assertThatThrownBy(() -> {
+            Employee employee = new Employee(null, "Address", "name", null);
+            repository.save(employee);
+        })
+
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("Join Date in Employee cannot be empty");
+    }
 }

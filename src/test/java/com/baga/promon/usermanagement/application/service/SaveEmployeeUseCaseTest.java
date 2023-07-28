@@ -2,10 +2,11 @@ package com.baga.promon.usermanagement.application.service;
 import static com.baga.promon.usermanagement.util.UserManagementUtils.convertDateToLocalDateTime;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-import com.baga.promon.usermanagement.application.port.in.SaveEmployeeCommand;
+import com.baga.promon.usermanagement.adapter.port.in.SaveEmployeeCommand;
 import com.baga.promon.usermanagement.application.port.in.SaveEmployeeUseCase;
 import com.baga.promon.usermanagement.application.port.out.SaveEmployeeEntityPort;
 import com.baga.promon.usermanagement.domain.Employee;
@@ -38,6 +39,7 @@ public class SaveEmployeeUseCaseTest {
                     convertDateToLocalDateTime(saveEmployeeCommand.joinDate()));
             when(saveEmployeeEntityPort.saveEntity(employee)).thenReturn(1L);
             saveEmployeeUseCase.saveEmployee(saveEmployeeCommand);
+            verify(saveEmployeeEntityPort).saveEntity(employee);
         });
     }
 

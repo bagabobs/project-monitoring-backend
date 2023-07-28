@@ -1,7 +1,9 @@
-package com.baga.promon.usermanagement.adapter.port.out;
+package com.baga.promon.usermanagement.application.out;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.baga.promon.usermanagement.adapter.port.out.EmployeePersistenceAdapter;
+import com.baga.promon.usermanagement.adapter.port.out.EmployeesRepository;
 import com.baga.promon.usermanagement.application.port.out.SaveEmployeeEntityPort;
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
@@ -38,7 +40,7 @@ public class SaveEmployeeEntityPortTest {
     }
 
     @Test
-    void saveEntity() throws RepositoryImplementationException {
+    void saveEntityWhenEmployeeNullThenThrowException() throws RepositoryImplementationException {
         when(employeesRepository.save(null)).thenThrow(RepositoryImplementationException.class);
         assertThatThrownBy(() -> saveEmployeeEntityPort.saveEntity(null))
                 .isInstanceOf(PersistenceAdapterException.class);

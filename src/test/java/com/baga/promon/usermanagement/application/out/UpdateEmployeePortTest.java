@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateEmployeeEntityPortTest {
+public class UpdateEmployeePortTest {
     @Mock
     private EmployeesRepository employeesRepository;
     private UpdateEmployeePort updateEmployeePort;

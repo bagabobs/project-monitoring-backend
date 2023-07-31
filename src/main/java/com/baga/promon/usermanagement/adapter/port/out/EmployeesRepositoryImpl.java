@@ -8,6 +8,7 @@ import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
+import org.jooq.exception.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -32,19 +33,6 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
               .get(EMPLOYEES.ID).longValue();
    }
 
-   @Override
-   public Long update(Employee employee) throws RepositoryImplementationException {
-      validateEmployeeForUpdate(employee);
-
-      context.update(EMPLOYEES)
-              .set(EMPLOYEES.ADDRESS, employee.address())
-              .set(EMPLOYEES.NAME, employee.name())
-              .set(EMPLOYEES.JOIN_DATE, employee.joinDate())
-              .where(EMPLOYEES.ID.eq(employee.id()))
-              .execute();
-      return employee.id().longValue();
-   }
-
    private void validateEmployeeForInsert(Employee employee) throws RepositoryImplementationException {
       if (employee == null) {
          throw new RepositoryImplementationException("Employee cannot be empty");
@@ -61,6 +49,19 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
       if (employee.joinDate() == null) {
          throw new RepositoryImplementationException("Join Date in Employee cannot be empty");
       }
+   }
+
+   @Override
+   public Long update(Employee employee) throws RepositoryImplementationException {
+      validateEmployeeForUpdate(employee);
+
+      context.update(EMPLOYEES)
+              .set(EMPLOYEES.ADDRESS, employee.address())
+              .set(EMPLOYEES.NAME, employee.name())
+              .set(EMPLOYEES.JOIN_DATE, employee.joinDate())
+              .where(EMPLOYEES.ID.eq(employee.id()))
+              .execute();
+      return employee.id().longValue();
    }
 
    private void validateEmployeeForUpdate(Employee employee) throws RepositoryImplementationException {
@@ -82,6 +83,22 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
 
       if (employee.joinDate() == null) {
          throw new RepositoryImplementationException("Join Date in Employee cannot be empty");
+      }
+   }
+
+   @Override
+   public Long delete(Long id) throws RepositoryImplementationException {
+      validateDeleteId(id);
+
+      context.delete(EMPLOYEES)
+              .where(EMPLOYEES.ID.eq(new BigDecimal(id)))
+              .execute();
+      return id;
+   }
+
+   private void validateDeleteId(Long id) throws RepositoryImplementationException {
+      if (id == null) {
+         throw new RepositoryImplementationException("ID cannot be empty");
       }
    }
 }

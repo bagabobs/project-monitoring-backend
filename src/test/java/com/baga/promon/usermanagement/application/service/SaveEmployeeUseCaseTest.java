@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.baga.promon.usermanagement.adapter.port.in.SaveEmployeeCommand;
 import com.baga.promon.usermanagement.application.port.in.SaveEmployeeUseCase;
-import com.baga.promon.usermanagement.application.port.out.SaveEmployeeEntityPort;
+import com.baga.promon.usermanagement.application.port.out.SaveEmployeePort;
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.util.UserManagementException;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,12 +22,12 @@ import java.util.Date;
 @ExtendWith(MockitoExtension.class)
 public class SaveEmployeeUseCaseTest {
     @Mock
-    private SaveEmployeeEntityPort saveEmployeeEntityPort;
+    private SaveEmployeePort saveEmployeePort;
     private SaveEmployeeUseCase saveEmployeeUseCase;
 
     @BeforeEach
     void initialSetup() {
-        saveEmployeeUseCase = new SaveEmployeeService(saveEmployeeEntityPort);
+        saveEmployeeUseCase = new SaveEmployeeService(saveEmployeePort);
     }
 
     @Test
@@ -37,9 +37,9 @@ public class SaveEmployeeUseCaseTest {
                     new Date());
             Employee employee = new Employee(null, saveEmployeeCommand.address(), saveEmployeeCommand.name(),
                     convertDateToLocalDateTime(saveEmployeeCommand.joinDate()));
-            when(saveEmployeeEntityPort.saveEntity(employee)).thenReturn(1L);
+            when(saveEmployeePort.saveEntity(employee)).thenReturn(1L);
             saveEmployeeUseCase.saveEmployee(saveEmployeeCommand);
-            verify(saveEmployeeEntityPort).saveEntity(employee);
+            verify(saveEmployeePort).saveEntity(employee);
         });
     }
 

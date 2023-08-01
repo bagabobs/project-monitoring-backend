@@ -6,4 +6,6 @@ public interface UserManagementRepository<T, V> {
     T save(V v) throws RepositoryImplementationException;
 
     T update(V v) throws RepositoryImplementationException;
+
+    T delete(T id) throws RepositoryImplementationException;
 }

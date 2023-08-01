@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.baga.promon.usermanagement.adapter.port.out.EmployeePersistenceAdapter;
 import com.baga.promon.usermanagement.adapter.port.out.EmployeesRepository;
-import com.baga.promon.usermanagement.application.port.out.SaveEmployeeEntityPort;
+import com.baga.promon.usermanagement.application.port.out.SaveEmployeePort;
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
 import com.baga.promon.usermanagement.util.PersistenceAdapterException;
@@ -17,24 +17,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SaveEmployeeEntityPortTest {
+public class SaveEmployeePortTest {
     @Mock
     private EmployeesRepository employeesRepository;
-    private SaveEmployeeEntityPort saveEmployeeEntityPort;
+    private SaveEmployeePort saveEmployeePort;
 
     @BeforeEach
     void initialSetup() {
-        saveEmployeeEntityPort = new EmployeePersistenceAdapter(employeesRepository);
+        saveEmployeePort = new EmployeePersistenceAdapter(employeesRepository);
     }
 
     @Test
     void saveEntitySuccess() throws Exception {
         Employee employee = new Employee(null, "address", "name", LocalDateTime.now());
         when(employeesRepository.save(employee)).thenReturn(1L);
-        Long saveResult = saveEmployeeEntityPort.saveEntity(employee);
+        Long saveResult = saveEmployeePort.saveEntity(employee);
+        verify(employeesRepository).save(employee);
 
         assertThat(saveResult).isEqualTo(1L);
     }
@@ -42,7 +44,7 @@ public class SaveEmployeeEntityPortTest {
     @Test
     void saveEntityWhenEmployeeNullThenThrowException() throws RepositoryImplementationException {
         when(employeesRepository.save(null)).thenThrow(RepositoryImplementationException.class);
-        assertThatThrownBy(() -> saveEmployeeEntityPort.saveEntity(null))
+        assertThatThrownBy(() -> saveEmployeePort.saveEntity(null))
                 .isInstanceOf(PersistenceAdapterException.class);
     }
 }

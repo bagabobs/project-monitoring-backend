@@ -2,7 +2,7 @@ package com.baga.promon.usermanagement.application.service;
 
 import com.baga.promon.usermanagement.adapter.port.in.SaveEmployeeCommand;
 import com.baga.promon.usermanagement.application.port.in.SaveEmployeeUseCase;
-import com.baga.promon.usermanagement.application.port.out.SaveEmployeeEntityPort;
+import com.baga.promon.usermanagement.application.port.out.SaveEmployeePort;
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.util.PersistenceAdapterException;
 import com.baga.promon.usermanagement.util.UserManagementException;
@@ -12,10 +12,10 @@ import static com.baga.promon.usermanagement.util.UserManagementUtils.convertDat
 
 @Service
 public class SaveEmployeeService implements SaveEmployeeUseCase {
-    private final SaveEmployeeEntityPort saveEmployeeEntityPort;
+    private final SaveEmployeePort saveEmployeePort;
 
-    public SaveEmployeeService(SaveEmployeeEntityPort saveEmployeeEntityPort) {
-        this.saveEmployeeEntityPort = saveEmployeeEntityPort;
+    public SaveEmployeeService(SaveEmployeePort saveEmployeePort) {
+        this.saveEmployeePort = saveEmployeePort;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class SaveEmployeeService implements SaveEmployeeUseCase {
 
             Employee employee = new Employee(null, command.address(), command.name(),
                     convertDateToLocalDateTime(command.joinDate()));
-            saveEmployeeEntityPort.saveEntity(employee);
+            saveEmployeePort.saveEntity(employee);
         } catch (PersistenceAdapterException e) {
             throw new UserManagementException(e.getMessage(), e);
         }

@@ -143,4 +143,25 @@ public class EmployeesRepositoryTest {
                 .isInstanceOf(RepositoryImplementationException.class)
                 .hasMessage("Join Date in Employee cannot be empty");
     }
+
+    @Test
+    void deleteEmployeeDataEmptyWhenSelected() throws Exception {
+        String address = "address";
+        String name = "name";
+        LocalDateTime offsetDateTimeNow = LocalDateTime.now();
+        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
+        Long saveId = repository.save(employee);
+
+        EmployeesRecord record = context.selectFrom(EMPLOYEES)
+                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        assertThat(record).isNotNull();
+        assertThat(record.getId()).isEqualTo(BigDecimal.valueOf(saveId));
+
+        repository.delete(saveId);
+
+        record = context.selectFrom(EMPLOYEES)
+                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        System.out.println(record);
+        assertThat(record).isNull();
+    }
 }

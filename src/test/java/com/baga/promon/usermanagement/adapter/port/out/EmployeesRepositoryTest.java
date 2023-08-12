@@ -15,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.jooq.JooqTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @JooqTest(
         properties = {"spring.test.database.replace=none", "spring.datasource.url=jdbc:tc:postgresql:15.3-alpine:///db"
@@ -161,7 +163,33 @@ public class EmployeesRepositoryTest {
 
         record = context.selectFrom(EMPLOYEES)
                 .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
-        System.out.println(record);
         assertThat(record).isNull();
+    }
+
+    @Test
+    void findAllEmployeeWillGetAllData() throws Exception {
+        String address = "address";
+        String name = "name";
+        LocalDateTime offsetDateTimeNow = LocalDateTime.now();
+        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
+        Long saveId = repository.save(employee);
+
+        String address2 = "address2";
+        String name2 = "name2";
+        LocalDateTime localDateTimeNow2 = LocalDateTime.now();
+        Employee employee2 = new Employee(null, address2, name2, localDateTimeNow2);
+        Long saveId2 = repository.save(employee2);
+
+        List<EmployeesRecord> employeesRecords = context.selectFrom(EMPLOYEES).fetch().into(EmployeesRecord.class);
+        assertThat(employeesRecords.size()).isEqualTo(2);
+
+        List<BigDecimal> bigDecimals = new ArrayList<>();
+        bigDecimals.add(BigDecimal.valueOf(saveId));
+        bigDecimals.add(BigDecimal.valueOf(saveId2));
+
+        List<Employee> employees = repository.findAll();
+        assertThat(employees.size()).isEqualTo(2);
+        assertThat(employees.get(0).id()).isIn(bigDecimals);
+        assertThat(employees.get(1).id()).isIn(bigDecimals);
     }
 }

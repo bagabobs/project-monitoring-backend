@@ -3,14 +3,17 @@ package com.baga.promon.usermanagement.adapter.port.out;
 
 import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEES;
 import static com.baga.promon.usermanagement.generated.Sequences.EMPLOYEES_SEQ;
+import static java.util.stream.Collectors.toList;
 
 import com.baga.promon.usermanagement.domain.Employee;
+import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -99,5 +102,18 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
       if (id == null) {
          throw new RepositoryImplementationException("ID cannot be empty");
       }
+   }
+
+   @Override
+   public List<Employee> findAll() throws RepositoryImplementationException {
+      List<EmployeesRecord> employeesRecords = context.selectFrom(EMPLOYEES).fetch();
+      return employeesRecords.stream()
+              .map(v -> new Employee(v.getId(), v.getAddress(), v.getName(), v.getJoinDate()))
+              .collect(toList());
+   }
+
+   @Override
+   public List<Employee> findAfterId(Long id, int size) throws RepositoryImplementationException {
+      return null;
    }
 }

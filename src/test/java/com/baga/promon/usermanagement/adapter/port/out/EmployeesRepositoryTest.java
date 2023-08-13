@@ -186,6 +186,20 @@ public class EmployeesRepositoryTest {
         assertThat(idsFromRepoSecondPage).isEqualTo(secondPage);
     }
 
+    @Test
+    void findAfterIdWhenIdEmptyThenThrowsException() {
+        assertThatThrownBy(() -> repository.findAfterId(null, 10))
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("ID cannot be empty");
+    }
+
+    @Test
+    void findAfterIdWhenSizeIsLessThen1TheThrowsException() {
+        assertThatThrownBy(() -> repository.findAfterId(1L, 0))
+                .isInstanceOf(RepositoryImplementationException.class)
+                .hasMessage("Size cannot be less than 1");
+    }
+
     private Long insertEmployee(String address, String name) throws RepositoryImplementationException {
         Employee employee = new Employee(null, address, name, LocalDateTime.now());
         return repository.save(employee);

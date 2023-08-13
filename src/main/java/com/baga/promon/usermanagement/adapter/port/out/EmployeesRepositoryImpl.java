@@ -114,12 +114,27 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
 
    @Override
    public List<Employee> findAfterId(Long id, int size) throws RepositoryImplementationException {
+      validateId(id);
+      validateSize(size);
       return context.selectFrom(EMPLOYEES)
               .orderBy(EMPLOYEES.ID)
               .seek(BigDecimal.valueOf(id))
               .limit(size)
               .fetchInto(EmployeesRecord.class)
-              .stream().map(val -> new Employee(val.getId(), val.getAddress(), val.getName(), val.getJoinDate()))
+              .stream()
+              .map(val -> new Employee(val.getId(), val.getAddress(), val.getName(), val.getJoinDate()))
               .toList();
+   }
+
+   private void validateId(Long id) throws RepositoryImplementationException {
+      if (id == null) {
+         throw new RepositoryImplementationException("ID cannot be empty");
+      }
+   }
+
+   private void validateSize(int size) throws RepositoryImplementationException {
+      if (size < 1) {
+         throw new RepositoryImplementationException("Size cannot be less than 1");
+      }
    }
 }

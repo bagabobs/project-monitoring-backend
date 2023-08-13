@@ -42,4 +42,9 @@ public class LoadEmployeePortTest {
         assertThat(employeeListResult.size()).isEqualTo(employees.size());
         verify(employeesRepository).findAll();
     }
+
+    @Test
+    void loadEmployeePerPageGetFirstPageWhenFirstIdIs0() throws Exception {
+
+    }
 }

@@ -114,6 +114,12 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
 
    @Override
    public List<Employee> findAfterId(Long id, int size) throws RepositoryImplementationException {
-      return null;
+      return context.selectFrom(EMPLOYEES)
+              .orderBy(EMPLOYEES.ID)
+              .seek(BigDecimal.valueOf(id))
+              .limit(size)
+              .fetchInto(EmployeesRecord.class)
+              .stream().map(val -> new Employee(val.getId(), val.getAddress(), val.getName(), val.getJoinDate()))
+              .toList();
    }
 }

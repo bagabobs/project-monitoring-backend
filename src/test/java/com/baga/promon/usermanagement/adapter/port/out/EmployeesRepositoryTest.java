@@ -1,8 +1,7 @@
 package com.baga.promon.usermanagement.adapter.port.out;
 
 import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEES;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
@@ -81,13 +80,10 @@ public class EmployeesRepositoryTest {
     @Test
     void updateEmployeeHaveSameDataWithSelectQuery() throws RepositoryImplementationException {
         String address = "address";
-        String name = "name";
-        LocalDateTime offsetDateTimeNow = LocalDateTime.now();
-        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
-        Long saveId = repository.save(employee);
+        Long saveId = insertEmployee(address, "name");
 
         String updatedName = "updatedn name";
-        Employee updatedEmployee = new Employee(new BigDecimal(saveId), address, updatedName, offsetDateTimeNow);
+        Employee updatedEmployee = new Employee(new BigDecimal(saveId), address, updatedName, LocalDateTime.now());
         Long result = repository.update(updatedEmployee);
 
         EmployeesRecord record = context.selectFrom(EMPLOYEES)
@@ -147,12 +143,8 @@ public class EmployeesRepositoryTest {
     }
 
     @Test
-    void deleteEmployeeDataEmptyWhenSelected() throws Exception {
-        String address = "address";
-        String name = "name";
-        LocalDateTime offsetDateTimeNow = LocalDateTime.now();
-        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
-        Long saveId = repository.save(employee);
+    void deleteDataEmptyWhenSelected() throws Exception {
+        Long saveId = insertEmployee("address", "name");
 
         EmployeesRecord record = context.selectFrom(EMPLOYEES)
                 .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
@@ -167,29 +159,44 @@ public class EmployeesRepositoryTest {
     }
 
     @Test
-    void findAllEmployeeWillGetAllData() throws Exception {
-        String address = "address";
-        String name = "name";
-        LocalDateTime offsetDateTimeNow = LocalDateTime.now();
-        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
-        Long saveId = repository.save(employee);
+    void findAllWillGetAllData() throws Exception {
+        List<Long> insertedIds = insertBundle(2);
 
-        String address2 = "address2";
-        String name2 = "name2";
-        LocalDateTime localDateTimeNow2 = LocalDateTime.now();
-        Employee employee2 = new Employee(null, address2, name2, localDateTimeNow2);
-        Long saveId2 = repository.save(employee2);
-
-        List<EmployeesRecord> employeesRecords = context.selectFrom(EMPLOYEES).fetch().into(EmployeesRecord.class);
-        assertThat(employeesRecords.size()).isEqualTo(2);
-
-        List<BigDecimal> bigDecimals = new ArrayList<>();
-        bigDecimals.add(BigDecimal.valueOf(saveId));
-        bigDecimals.add(BigDecimal.valueOf(saveId2));
 
         List<Employee> employees = repository.findAll();
         assertThat(employees.size()).isEqualTo(2);
-        assertThat(employees.get(0).id()).isIn(bigDecimals);
-        assertThat(employees.get(1).id()).isIn(bigDecimals);
+        assertThat(employees.get(0).id().longValue()).isIn(insertedIds);
+        assertThat(employees.get(1).id().longValue()).isIn(insertedIds);
+    }
+
+    @Test
+    void findAfterIdWillGetDataEqualToLimitSize() throws Exception {
+        List<Long> ids = insertBundle(100);
+        List<Long> firstPageId = ids.stream().limit(10).toList();
+
+        List<Long> idsFromRepo = repository.findAfterId(0L, 10).stream()
+                .map(val -> val.id().longValue()).toList();
+
+        assertThat(idsFromRepo).isEqualTo(firstPageId);
+
+        List<Long> secondPage = ids.stream().skip(10).limit(10).toList();
+
+        List<Long> idsFromRepoSecondPage = repository.findAfterId(idsFromRepo.get(9), 10).stream()
+                .map(val -> val.id().longValue()).toList();
+        assertThat(idsFromRepoSecondPage).isEqualTo(secondPage);
+    }
+
+    private Long insertEmployee(String address, String name) throws RepositoryImplementationException {
+        Employee employee = new Employee(null, address, name, LocalDateTime.now());
+        return repository.save(employee);
+    }
+
+    private List<Long> insertBundle(int size) throws RepositoryImplementationException {
+        List<Long> ids = new ArrayList<>();
+        for (int i = 1; i <= size; i++) {
+            Long saveId = insertEmployee("address"+i, "name"+i);
+            ids.add(saveId);
+        }
+        return ids;
     }
 }

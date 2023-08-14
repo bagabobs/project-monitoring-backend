@@ -49,11 +49,21 @@ public class EmployeePersistenceAdapter implements SaveEmployeePort, UpdateEmplo
     }
 
     @Override
-    public List<Employee> findAllEmployee() throws PersistenceAdapterException {
+    public List<Employee> loadAllEmployee() throws PersistenceAdapterException {
         try {
             return employeesRepository.findAll();
         } catch(RepositoryImplementationException exception) {
             throw new PersistenceAdapterException(exception.getMessage(), exception);
         }
+    }
+
+    @Override
+    public List<Employee> loadEmployeeAfterId(Long id, int size) throws PersistenceAdapterException {
+        try {
+            return employeesRepository.findAfterId(id, size);
+        } catch(RepositoryImplementationException e) {
+            throw new PersistenceAdapterException(e.getMessage(), e);
+        }
+
     }
 }

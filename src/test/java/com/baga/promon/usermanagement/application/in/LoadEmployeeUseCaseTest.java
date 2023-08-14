@@ -36,12 +36,12 @@ public class LoadEmployeeUseCaseTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(new Employee(BigDecimal.valueOf(1L), "address", "name", LocalDateTime.now()));
         employees.add(new Employee(BigDecimal.valueOf(2L), "address2", "name2", LocalDateTime.now()));
-        when(loadEmployeePort.findAllEmployee()).thenReturn(employees);
+        when(loadEmployeePort.loadAllEmployee()).thenReturn(employees);
 
         List<BigDecimal> bigDecimals = employees.stream().map(Employee::id).collect(Collectors.toList());
 
         List<Employee> resultEmployees = loadEmployeeUseCase.loadAllEmployee();
-        verify(loadEmployeePort).findAllEmployee();
+        verify(loadEmployeePort).loadAllEmployee();
 
         assertThat(resultEmployees.size()).isEqualTo(employees.size());
         assertThat(resultEmployees.get(0).id()).isIn(bigDecimals);

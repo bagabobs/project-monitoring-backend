@@ -20,7 +20,7 @@ public class LoadEmployeeService implements LoadEmployeeUseCase {
     @Override
     public List<Employee> loadAllEmployee() throws UserManagementException {
         try {
-            return loadEmployeePort.findAllEmployee();
+            return loadEmployeePort.loadAllEmployee();
         } catch (PersistenceAdapterException e) {
             throw new UserManagementException(e.getMessage(), e);
         }

@@ -6,5 +6,7 @@ import com.baga.promon.usermanagement.util.PersistenceAdapterException;
 import java.util.List;
 
 public interface LoadEmployeePort {
-    List<Employee> findAllEmployee() throws PersistenceAdapterException;
+    List<Employee> loadAllEmployee() throws PersistenceAdapterException;
+
+    List<Employee> loadEmployeeAfterId(Long id, int size) throws PersistenceAdapterException;
 }

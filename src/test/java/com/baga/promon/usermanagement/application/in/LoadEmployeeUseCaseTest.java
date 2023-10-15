@@ -1,8 +1,7 @@
 package com.baga.promon.usermanagement.application.in;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.baga.promon.usermanagement.application.port.in.LoadEmployeeUseCase;
 import com.baga.promon.usermanagement.application.port.out.LoadEmployeePort;
@@ -18,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,5 +63,23 @@ class LoadEmployeeUseCaseTest {
         assertThat(resultEmployees).hasSameSizeAs(employees);
         assertThat(resultEmployees.get(0).id()).isIn(bigDecimals);
         assertThat(resultEmployees.get(1).id()).isIn(bigDecimals);
+    }
+
+    @Test
+    void loadEmployeeByIdGetTheSameSize() throws Exception {
+        Employee employee = new Employee(BigDecimal.valueOf(1L), "address", "name", LocalDateTime.now());
+        when(loadEmployeePort.loadEmployeeById(1L)).thenReturn(Optional.of(employee));
+
+        Optional<Employee> employeeOptional = loadEmployeeUseCase.loadEmployeeById(1L);
+        verify(loadEmployeePort, times(1)).loadEmployeeById(1L);
+        assertThat(employeeOptional).isEqualTo(Optional.of(employee));
+    }
+
+    @Test
+    void loadEmployeeByIdGetEmpty() throws Exception {
+        when(loadEmployeePort.loadEmployeeById(1L)).thenReturn(Optional.empty());
+        Optional<Employee> employeeOptional = loadEmployeeUseCase.loadEmployeeById(1L);
+        verify(loadEmployeePort, times(1)).loadEmployeeById(1L);
+        assertThat(employeeOptional).isEmpty();
     }
 }

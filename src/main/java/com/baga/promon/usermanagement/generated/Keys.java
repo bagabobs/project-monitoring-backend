@@ -4,8 +4,8 @@
 package com.baga.promon.usermanagement.generated;
 
 
-import com.baga.promon.usermanagement.generated.tables.Employees;
-import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
+import com.baga.promon.usermanagement.generated.tables.EmployeeEntity;
+import com.baga.promon.usermanagement.generated.tables.records.EmployeeEntityRecord;
 
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -24,5 +24,5 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<EmployeesRecord> EMPLOYEE_PK = Internal.createUniqueKey(Employees.EMPLOYEES, DSL.name("employee_pk"), new TableField[] { Employees.EMPLOYEES.ID }, true);
+    public static final UniqueKey<EmployeeEntityRecord> EMPLOYEE_PK = Internal.createUniqueKey(EmployeeEntity.EMPLOYEE_ENTITY, DSL.name("employee_pk"), new TableField[] { EmployeeEntity.EMPLOYEE_ENTITY.ID }, true);
 }

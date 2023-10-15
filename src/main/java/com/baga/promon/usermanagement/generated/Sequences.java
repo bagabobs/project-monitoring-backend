@@ -16,7 +16,7 @@ import org.jooq.impl.SQLDataType;
 public class Sequences {
 
     /**
-     * The sequence <code>public.employees_seq</code>
+     * The sequence <code>public.employee_entity_seq</code>
      */
-    public static final Sequence<Long> EMPLOYEES_SEQ = Internal.createSequence("employees_seq", Public.PUBLIC, SQLDataType.BIGINT.nullable(false), 100000, 10, 100000, 10000000, false, null);
+    public static final Sequence<Long> EMPLOYEE_ENTITY_SEQ = Internal.createSequence("employee_entity_seq", Public.PUBLIC, SQLDataType.BIGINT.nullable(false), 100000, 10, 100000, 10000000, false, null);
 }

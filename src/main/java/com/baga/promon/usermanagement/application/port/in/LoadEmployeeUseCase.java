@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface LoadEmployeeUseCase {
     List<Employee> loadAllEmployee() throws UserManagementException;
+
+    List<Employee> loadEmployeeByPage(Long id, int size) throws UserManagementException;
 }

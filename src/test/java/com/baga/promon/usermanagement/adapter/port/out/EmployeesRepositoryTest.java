@@ -2,8 +2,6 @@ package com.baga.promon.usermanagement.adapter.port.out;
 
 import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEES;
 import static org.assertj.core.api.Assertions.*;
-import static org.jooq.impl.DSL.cos;
-import static org.jooq.impl.DSL.val;
 
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;

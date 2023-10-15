@@ -25,4 +25,13 @@ public class LoadEmployeeService implements LoadEmployeeUseCase {
             throw new UserManagementException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<Employee> loadEmployeeByPage(Long id, int size) throws UserManagementException {
+        try {
+            return loadEmployeePort.loadEmployeeAfterId(id, size);
+        } catch(PersistenceAdapterException e) {
+            throw new UserManagementException(e.getMessage(), e);
+        }
+    }
 }

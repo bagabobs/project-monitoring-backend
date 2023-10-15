@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
-public class LoadEmployeeUseCaseTest {
+class LoadEmployeeUseCaseTest {
     @Mock
     private LoadEmployeePort loadEmployeePort;
     private LoadEmployeeUseCase loadEmployeeUseCase;
@@ -43,7 +43,24 @@ public class LoadEmployeeUseCaseTest {
         List<Employee> resultEmployees = loadEmployeeUseCase.loadAllEmployee();
         verify(loadEmployeePort).loadAllEmployee();
 
-        assertThat(resultEmployees.size()).isEqualTo(employees.size());
+        assertThat(resultEmployees).hasSameSizeAs(employees);
+        assertThat(resultEmployees.get(0).id()).isIn(bigDecimals);
+        assertThat(resultEmployees.get(1).id()).isIn(bigDecimals);
+    }
+
+    @Test
+    void loadEmployeeByPageGetTheSameSize() throws Exception {
+        List<Employee> employees = new ArrayList<>();
+        employees.add(new Employee(BigDecimal.valueOf(1L), "address", "name", LocalDateTime.now()));
+        employees.add(new Employee(BigDecimal.valueOf(2L), "address2", "name2", LocalDateTime.now()));
+        when(loadEmployeePort.loadEmployeeAfterId(0L, 2)).thenReturn(employees);
+
+        List<BigDecimal> bigDecimals = employees.stream().map(Employee::id).toList();
+
+        List<Employee> resultEmployees = loadEmployeeUseCase.loadEmployeeByPage(0L, 2);
+        verify(loadEmployeePort).loadEmployeeAfterId(0L, 2);
+
+        assertThat(resultEmployees).hasSameSizeAs(employees);
         assertThat(resultEmployees.get(0).id()).isIn(bigDecimals);
         assertThat(resultEmployees.get(1).id()).isIn(bigDecimals);
     }

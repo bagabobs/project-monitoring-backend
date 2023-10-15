@@ -2,6 +2,8 @@ package com.baga.promon.usermanagement.adapter.port.out;
 
 import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEES;
 import static org.assertj.core.api.Assertions.*;
+import static org.jooq.impl.DSL.cos;
+import static org.jooq.impl.DSL.val;
 
 import com.baga.promon.usermanagement.domain.Employee;
 import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
@@ -20,7 +22,7 @@ import java.util.List;
 @JooqTest(
         properties = {"spring.test.database.replace=none", "spring.datasource.url=jdbc:tc:postgresql:15.3-alpine:///db"
         })
-public class EmployeesRepositoryTest {
+class EmployeesRepositoryTest {
     @Autowired
     private DSLContext context;
     private EmployeesRepository repository;
@@ -164,7 +166,7 @@ public class EmployeesRepositoryTest {
 
 
         List<Employee> employees = repository.findAll();
-        assertThat(employees.size()).isEqualTo(2);
+        assertThat(employees).hasSize(2);
         assertThat(employees.get(0).id().longValue()).isIn(insertedIds);
         assertThat(employees.get(1).id().longValue()).isIn(insertedIds);
     }

@@ -124,6 +124,10 @@
 										<packageName>com.baga.promon.usermanagement.generated</packageName>
 										<directory>src/main/java</directory>
 									</target>
+									<generate>
+										<pojos>true</pojos>
+										<pojosToString>true</pojosToString>
+									</generate>
 								</generator>
 							</jooq>
 						</configuration>

@@ -1,10 +1,9 @@
 package com.baga.promon.usermanagement.adapter.port.out;
 
-import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEES;
+import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEE_ENTITY;
 import static org.assertj.core.api.Assertions.*;
 
-import com.baga.promon.usermanagement.domain.Employee;
-import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
+import com.baga.promon.usermanagement.generated.tables.pojos.EmployeeEntity;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,12 +34,12 @@ class EmployeesRepositoryTest {
         String address = "address";
         String name = "name";
         LocalDateTime offsetDateTimeNow = LocalDateTime.now();
-        Employee employee = new Employee(null, address, name, offsetDateTimeNow);
+        EmployeeEntity employee = new EmployeeEntity(null, name, address, offsetDateTimeNow);
         Long saveId = repository.save(employee);
 
 
-        EmployeesRecord record = context.selectFrom(EMPLOYEES)
-                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        EmployeeEntity record = context.selectFrom(EMPLOYEE_ENTITY)
+                .where(EMPLOYEE_ENTITY.ID.eq(BigDecimal.valueOf(saveId))).fetchOneInto(EmployeeEntity.class);
         assertThat(record).isNotNull();
         assertThat(record.getAddress()).isEqualTo(address);
         assertThat(record.getName()).isEqualTo(name);
@@ -55,7 +54,7 @@ class EmployeesRepositoryTest {
 
     @Test
     void saveEmployeeWhenAddressInEmployeeIsEmptyThenThrowsException() {
-        Employee employee = new Employee(null, null, "name", LocalDateTime.now());
+        EmployeeEntity employee = new EmployeeEntity(null, "name", null, LocalDateTime.now());
         assertThatThrownBy(() -> repository.save(employee))
                 .isInstanceOf(RepositoryImplementationException.class)
                 .hasMessage("Address in Employee cannot be empty");
@@ -63,7 +62,7 @@ class EmployeesRepositoryTest {
 
     @Test
     void saveEmployeeWhenNameInEmployeeIsEmptyThenThrowsException() {
-        Employee employee = new Employee(null, "Address", null, LocalDateTime.now());
+        EmployeeEntity employee = new EmployeeEntity(null, null, "address", LocalDateTime.now());
         assertThatThrownBy(() -> repository.save(employee))
                 .isInstanceOf(RepositoryImplementationException.class)
                 .hasMessage("Name in Employee cannot be empty");
@@ -71,7 +70,7 @@ class EmployeesRepositoryTest {
 
     @Test
     void saveEmployeeWhenJoinDateInEmployeeIsEmptyThenThrowsException() {
-        Employee employee = new Employee(null, "Address", "name", null);
+        EmployeeEntity employee = new EmployeeEntity(null, "Address", "name", null);
         assertThatThrownBy(() -> repository.save(employee))
                 .isInstanceOf(RepositoryImplementationException.class)
                 .hasMessage("Join Date in Employee cannot be empty");
@@ -83,11 +82,11 @@ class EmployeesRepositoryTest {
         Long saveId = insertEmployee(address, "name");
 
         String updatedName = "updatedn name";
-        Employee updatedEmployee = new Employee(new BigDecimal(saveId), address, updatedName, LocalDateTime.now());
+        EmployeeEntity updatedEmployee = new EmployeeEntity(new BigDecimal(saveId), updatedName, address, LocalDateTime.now());
         Long result = repository.update(updatedEmployee);
 
-        EmployeesRecord record = context.selectFrom(EMPLOYEES)
-                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        EmployeeEntity record = context.selectFrom(EMPLOYEE_ENTITY)
+                .where(EMPLOYEE_ENTITY.ID.eq(BigDecimal.valueOf(saveId))).fetchOneInto(EmployeeEntity.class);
         assertThat(record).isNotNull();
         assertThat(result).isEqualTo(saveId);
         assertThat(record.getAddress()).isEqualTo(address);
@@ -104,7 +103,7 @@ class EmployeesRepositoryTest {
     @Test
     void updateEmployeeWhenIdInEmployeeIsEmptyThenThrowException() {
         assertThatThrownBy(() -> {
-            Employee employee = new Employee(null, "Address", "name", LocalDateTime.now());
+            EmployeeEntity employee = new EmployeeEntity(null, "Address", "name", LocalDateTime.now());
             repository.update(employee);
         })
                 .isInstanceOf(RepositoryImplementationException.class)
@@ -114,7 +113,7 @@ class EmployeesRepositoryTest {
     @Test
     void updateEmployeeWhenNameInEmployeeIsEmptyThenThrowException() {
         assertThatThrownBy(() -> {
-            Employee employee = new Employee(new BigDecimal(1), "address", null, LocalDateTime.now());
+            EmployeeEntity employee = new EmployeeEntity(new BigDecimal(1), null, "address", LocalDateTime.now());
             repository.update(employee);
         })
                 .isInstanceOf(RepositoryImplementationException.class)
@@ -124,7 +123,7 @@ class EmployeesRepositoryTest {
     @Test
     void updateEmployeeWhenAddressIsEmptyThenThrowException() {
         assertThatThrownBy(() -> {
-            Employee employee = new Employee(new BigDecimal(1), null, "name", LocalDateTime.now());
+            EmployeeEntity employee = new EmployeeEntity(new BigDecimal(1), "name", null, LocalDateTime.now());
             repository.update(employee);
         })
                 .isInstanceOf(RepositoryImplementationException.class)
@@ -134,7 +133,7 @@ class EmployeesRepositoryTest {
     @Test
     void updateEmployeeWhenJoinDateInEmployeeIsEmptyThenThrowsException() {
         assertThatThrownBy(() -> {
-            Employee employee = new Employee(null, "Address", "name", null);
+            EmployeeEntity employee = new EmployeeEntity(null, "Address", "name", null);
             repository.save(employee);
         })
 
@@ -146,15 +145,15 @@ class EmployeesRepositoryTest {
     void deleteDataEmptyWhenSelected() throws Exception {
         Long saveId = insertEmployee("address", "name");
 
-        EmployeesRecord record = context.selectFrom(EMPLOYEES)
-                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        EmployeeEntity record = context.selectFrom(EMPLOYEE_ENTITY)
+                .where(EMPLOYEE_ENTITY.ID.eq(BigDecimal.valueOf(saveId))).fetchOneInto(EmployeeEntity.class);
         assertThat(record).isNotNull();
         assertThat(record.getId()).isEqualTo(BigDecimal.valueOf(saveId));
 
         repository.delete(saveId);
 
-        record = context.selectFrom(EMPLOYEES)
-                .where(EMPLOYEES.ID.eq(BigDecimal.valueOf(saveId))).fetchOne();
+        record = context.selectFrom(EMPLOYEE_ENTITY)
+                .where(EMPLOYEE_ENTITY.ID.eq(BigDecimal.valueOf(saveId))).fetchOneInto(EmployeeEntity.class);
         assertThat(record).isNull();
     }
 
@@ -163,10 +162,10 @@ class EmployeesRepositoryTest {
         List<Long> insertedIds = insertBundle(2);
 
 
-        List<Employee> employees = repository.findAll();
+        List<EmployeeEntity> employees = repository.findAll();
         assertThat(employees).hasSize(2);
-        assertThat(employees.get(0).id().longValue()).isIn(insertedIds);
-        assertThat(employees.get(1).id().longValue()).isIn(insertedIds);
+        assertThat(employees.get(0).getId().longValue()).isIn(insertedIds);
+        assertThat(employees.get(1).getId().longValue()).isIn(insertedIds);
     }
 
     @Test
@@ -175,14 +174,14 @@ class EmployeesRepositoryTest {
         List<Long> firstPageId = ids.stream().limit(10).toList();
 
         List<Long> idsFromRepo = repository.findAfterId(0L, 10).stream()
-                .map(val -> val.id().longValue()).toList();
+                .map(val -> val.getId().longValue()).toList();
 
         assertThat(idsFromRepo).isEqualTo(firstPageId);
 
         List<Long> secondPage = ids.stream().skip(10).limit(10).toList();
 
         List<Long> idsFromRepoSecondPage = repository.findAfterId(idsFromRepo.get(9), 10).stream()
-                .map(val -> val.id().longValue()).toList();
+                .map(val -> val.getId().longValue()).toList();
         assertThat(idsFromRepoSecondPage).isEqualTo(secondPage);
     }
 
@@ -200,8 +199,21 @@ class EmployeesRepositoryTest {
                 .hasMessage("Size cannot be less than 1");
     }
 
+    @Test
+    void findByIdReturnSameSize() throws Exception {
+        Long id = insertEmployee("address", "name");
+        EmployeeEntity employeeEntity = repository.findById(id).orElseGet(EmployeeEntity::new);
+        assertThat(employeeEntity.getId()).isEqualTo(BigDecimal.valueOf(id));
+    }
+
+    @Test
+    void testEmpty() throws Exception {
+        EmployeeEntity employeeEntity = repository.findById(1L).orElseGet(EmployeeEntity::new);
+        assertThat(employeeEntity.getId()).isNull();
+    }
+
     private Long insertEmployee(String address, String name) throws RepositoryImplementationException {
-        Employee employee = new Employee(null, address, name, LocalDateTime.now());
+        EmployeeEntity employee = new EmployeeEntity(null, name, address, LocalDateTime.now());
         return repository.save(employee);
     }
 

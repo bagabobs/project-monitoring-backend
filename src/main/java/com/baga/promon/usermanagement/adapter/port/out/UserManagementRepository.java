@@ -3,6 +3,7 @@ package com.baga.promon.usermanagement.adapter.port.out;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserManagementRepository<T, V> {
     T save(V v) throws RepositoryImplementationException;
@@ -14,4 +15,6 @@ public interface UserManagementRepository<T, V> {
     List<V> findAll() throws RepositoryImplementationException;
 
     List<V> findAfterId(T id, int size) throws RepositoryImplementationException;
+
+    Optional<V> findById(T id) throws RepositoryImplementationException;
 }

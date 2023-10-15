@@ -1,12 +1,10 @@
 package com.baga.promon.usermanagement.adapter.port.out;
 
 
-import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEES;
-import static com.baga.promon.usermanagement.generated.Sequences.EMPLOYEES_SEQ;
-import static java.util.stream.Collectors.toList;
+import static com.baga.promon.usermanagement.generated.Tables.EMPLOYEE_ENTITY;
+import static com.baga.promon.usermanagement.generated.Sequences.EMPLOYEE_ENTITY_SEQ;
 
-import com.baga.promon.usermanagement.domain.Employee;
-import com.baga.promon.usermanagement.generated.tables.records.EmployeesRecord;
+import com.baga.promon.usermanagement.generated.tables.pojos.EmployeeEntity;
 import com.baga.promon.usermanagement.util.RepositoryImplementationException;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
@@ -25,65 +23,65 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
    }
 
    @Override
-   public Long save(Employee employee) throws RepositoryImplementationException {
+   public Long save(EmployeeEntity employee) throws RepositoryImplementationException {
       validateEmployeeForInsert(employee);
 
-      Optional<Record1<BigDecimal>> recordResult = context.insertInto(EMPLOYEES)
-              .values(EMPLOYEES_SEQ.nextval(), employee.name(), employee.address(), employee.joinDate())
-              .returningResult(EMPLOYEES.ID).fetchOptional();
+      Optional<Record1<BigDecimal>> recordResult = context.insertInto(EMPLOYEE_ENTITY)
+              .values(EMPLOYEE_ENTITY_SEQ.nextval(), employee.getName(), employee.getAddress(), employee.getJoinDate())
+              .returningResult(EMPLOYEE_ENTITY.ID).fetchOptional();
       return recordResult.orElseThrow(() -> new RepositoryImplementationException("Employee ID is empty"))
-              .get(EMPLOYEES.ID).longValue();
+              .get(EMPLOYEE_ENTITY.ID).longValue();
    }
 
-   private void validateEmployeeForInsert(Employee employee) throws RepositoryImplementationException {
+   private void validateEmployeeForInsert(EmployeeEntity employee) throws RepositoryImplementationException {
       if (employee == null) {
          throw new RepositoryImplementationException("Employee cannot be empty");
       }
 
-      if (employee.address() == null) {
+      if (employee.getAddress() == null) {
          throw new RepositoryImplementationException("Address in Employee cannot be empty");
       }
 
-      if (employee.name() == null) {
+      if (employee.getName() == null) {
          throw new RepositoryImplementationException("Name in Employee cannot be empty");
       }
 
-      if (employee.joinDate() == null) {
+      if (employee.getJoinDate() == null) {
          throw new RepositoryImplementationException("Join Date in Employee cannot be empty");
       }
    }
 
    @Override
-   public Long update(Employee employee) throws RepositoryImplementationException {
+   public Long update(EmployeeEntity employee) throws RepositoryImplementationException {
       validateEmployeeForUpdate(employee);
 
-      context.update(EMPLOYEES)
-              .set(EMPLOYEES.ADDRESS, employee.address())
-              .set(EMPLOYEES.NAME, employee.name())
-              .set(EMPLOYEES.JOIN_DATE, employee.joinDate())
-              .where(EMPLOYEES.ID.eq(employee.id()))
+      context.update(EMPLOYEE_ENTITY)
+              .set(EMPLOYEE_ENTITY.ADDRESS, employee.getAddress())
+              .set(EMPLOYEE_ENTITY.NAME, employee.getName())
+              .set(EMPLOYEE_ENTITY.JOIN_DATE, employee.getJoinDate())
+              .where(EMPLOYEE_ENTITY.ID.eq(employee.getId()))
               .execute();
-      return employee.id().longValue();
+      return employee.getId().longValue();
    }
 
-   private void validateEmployeeForUpdate(Employee employee) throws RepositoryImplementationException {
+   private void validateEmployeeForUpdate(EmployeeEntity employee) throws RepositoryImplementationException {
       if (employee == null) {
          throw new RepositoryImplementationException("Employee cannot be empty");
       }
 
-      if (employee.id() == null) {
+      if (employee.getId() == null) {
          throw new RepositoryImplementationException("ID in Employee cannot be empty");
       }
 
-      if (employee.address() == null) {
+      if (employee.getAddress() == null) {
          throw new RepositoryImplementationException("Address in Employee cannot be empty");
       }
 
-      if (employee.name() == null) {
+      if (employee.getName() == null) {
          throw new RepositoryImplementationException("Name in Employee cannot be empty");
       }
 
-      if (employee.joinDate() == null) {
+      if (employee.getJoinDate() == null) {
          throw new RepositoryImplementationException("Join Date in Employee cannot be empty");
       }
    }
@@ -92,8 +90,8 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
    public Long delete(Long id) throws RepositoryImplementationException {
       validateDeleteId(id);
 
-      context.delete(EMPLOYEES)
-              .where(EMPLOYEES.ID.eq(new BigDecimal(id)))
+      context.delete(EMPLOYEE_ENTITY)
+              .where(EMPLOYEE_ENTITY.ID.eq(new BigDecimal(id)))
               .execute();
       return id;
    }
@@ -105,25 +103,26 @@ public class EmployeesRepositoryImpl implements EmployeesRepository {
    }
 
    @Override
-   public List<Employee> findAll() throws RepositoryImplementationException {
-      List<EmployeesRecord> employeesRecords = context.selectFrom(EMPLOYEES).fetch();
-      return employeesRecords.stream()
-              .map(v -> new Employee(v.getId(), v.getAddress(), v.getName(), v.getJoinDate()))
-              .collect(toList());
+   public List<EmployeeEntity> findAll() throws RepositoryImplementationException {
+      return context.selectFrom(EMPLOYEE_ENTITY).fetchInto(EmployeeEntity.class);
    }
 
    @Override
-   public List<Employee> findAfterId(Long id, int size) throws RepositoryImplementationException {
+   public List<EmployeeEntity> findAfterId(Long id, int size) throws RepositoryImplementationException {
       validateId(id);
       validateSize(size);
-      return context.selectFrom(EMPLOYEES)
-              .orderBy(EMPLOYEES.ID)
+      return context.selectFrom(EMPLOYEE_ENTITY)
+              .orderBy(EMPLOYEE_ENTITY.ID)
               .seek(BigDecimal.valueOf(id))
               .limit(size)
-              .fetchInto(EmployeesRecord.class)
-              .stream()
-              .map(val -> new Employee(val.getId(), val.getAddress(), val.getName(), val.getJoinDate()))
-              .toList();
+              .fetchInto(EmployeeEntity.class);
+   }
+
+   @Override
+   public Optional<EmployeeEntity> findById(Long id) throws RepositoryImplementationException {
+      EmployeeEntity employeeEntity = context.selectFrom(EMPLOYEE_ENTITY).where(EMPLOYEE_ENTITY.ID.eq(BigDecimal.valueOf(id)))
+              .fetchOneInto(EmployeeEntity.class);
+      return Optional.ofNullable(employeeEntity);
    }
 
    private void validateId(Long id) throws RepositoryImplementationException {

@@ -5,6 +5,7 @@ package com.baga.promon.usermanagement.generated;
 
 
 import com.baga.promon.usermanagement.generated.tables.EmployeeEntity;
+import com.baga.promon.usermanagement.generated.tables.UserEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,11 @@ public class Public extends SchemaImpl {
     public final EmployeeEntity EMPLOYEE_ENTITY = EmployeeEntity.EMPLOYEE_ENTITY;
 
     /**
+     * The table <code>public.user_entity</code>.
+     */
+    public final UserEntity USER_ENTITY = UserEntity.USER_ENTITY;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -49,14 +55,16 @@ public class Public extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.asList(
-            Sequences.EMPLOYEE_ENTITY_SEQ
+            Sequences.EMPLOYEE_ENTITY_SEQ,
+            Sequences.USER_ENTITY_SEQ
         );
     }
 
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            EmployeeEntity.EMPLOYEE_ENTITY
+            EmployeeEntity.EMPLOYEE_ENTITY,
+            UserEntity.USER_ENTITY
         );
     }
 }

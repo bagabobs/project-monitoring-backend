@@ -1,9 +1,8 @@
 package com.baga.promon.usermanagement.adapter.port.in;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.baga.promon.usermanagement.application.port.in.LoadEmployeeUseCase;
 import com.baga.promon.usermanagement.domain.Employee;
@@ -18,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @WebMvcTest(controllers = LoadEmployeeController.class)
 class LoadEmployeeControllerTest {
@@ -72,6 +72,22 @@ class LoadEmployeeControllerTest {
                 .andExpect(jsonPath("$[*].id", Matchers.containsInAnyOrder(1, 2, 3, 4)))
                 .andExpect(jsonPath("$[*].address", Matchers.containsInAnyOrder("address1", "address2",
                         "address3", "address4")));
+    }
+
+    @Test
+    void getEmployeeByIdReturnEmployee() throws Exception {
+        when(loadEmployeeUseCase.loadEmployeeById(1L)).thenReturn(Optional.of(employees.get(0)));
+        mockMvc.perform(get("/v1/employee/getbyid/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(".id", Matchers.contains(1)));
+    }
+
+    @Test
+    void getEmployeeByIdWhenEmployeeNotFoundReturnStatusOkAndEmptyString() throws Exception {
+        when(loadEmployeeUseCase.loadEmployeeById(1L)).thenReturn(Optional.empty());
+        mockMvc.perform(get("/v1/employee/getbyid/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
     }
 
     private void createEmployees() {

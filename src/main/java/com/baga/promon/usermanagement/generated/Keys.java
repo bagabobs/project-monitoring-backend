@@ -5,8 +5,11 @@ package com.baga.promon.usermanagement.generated;
 
 
 import com.baga.promon.usermanagement.generated.tables.EmployeeEntity;
+import com.baga.promon.usermanagement.generated.tables.UserEntity;
 import com.baga.promon.usermanagement.generated.tables.records.EmployeeEntityRecord;
+import com.baga.promon.usermanagement.generated.tables.records.UserEntityRecord;
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -25,4 +28,11 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<EmployeeEntityRecord> EMPLOYEE_PK = Internal.createUniqueKey(EmployeeEntity.EMPLOYEE_ENTITY, DSL.name("employee_pk"), new TableField[] { EmployeeEntity.EMPLOYEE_ENTITY.ID }, true);
+    public static final UniqueKey<UserEntityRecord> USER_PK = Internal.createUniqueKey(UserEntity.USER_ENTITY, DSL.name("user_pk"), new TableField[] { UserEntity.USER_ENTITY.ID }, true);
+
+    // -------------------------------------------------------------------------
+    // FOREIGN KEY definitions
+    // -------------------------------------------------------------------------
+
+    public static final ForeignKey<UserEntityRecord, EmployeeEntityRecord> USER_ENTITY__EMPLOYEE_FK = Internal.createForeignKey(UserEntity.USER_ENTITY, DSL.name("employee_fk"), new TableField[] { UserEntity.USER_ENTITY.EMPLOYEE_ID }, Keys.EMPLOYEE_PK, new TableField[] { EmployeeEntity.EMPLOYEE_ENTITY.ID }, true);
 }

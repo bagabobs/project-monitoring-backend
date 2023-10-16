@@ -5,6 +5,7 @@ package com.baga.promon.usermanagement.generated;
 
 
 import com.baga.promon.usermanagement.generated.tables.EmployeeEntity;
+import com.baga.promon.usermanagement.generated.tables.UserEntity;
 
 
 /**
@@ -17,4 +18,9 @@ public class Tables {
      * The table <code>public.employee_entity</code>.
      */
     public static final EmployeeEntity EMPLOYEE_ENTITY = EmployeeEntity.EMPLOYEE_ENTITY;
+
+    /**
+     * The table <code>public.user_entity</code>.
+     */
+    public static final UserEntity USER_ENTITY = UserEntity.USER_ENTITY;
 }
